@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useId } from 'react'
 import { Container } from 'react-bootstrap'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import NewNote from './pages/NewNote'
@@ -28,16 +28,25 @@ export type Tag = { id: string; label: string }
 function App() {
 	const [notes, setNotes] = useLocalStorage<RawNote[]>('NOTES', [])
 	const [tags, setTags] = useLocalStorage<Tag[]>('TAGS', [])
+	const id = useId()
+
 	const noteWithTags = useMemo(() => {
 		return notes.map((note) => {
 			return { ...note, tags: tags.filter((tag) => note.tagIds.includes(tag.id)) }
 		})
 	}, [notes, tags])
+
+	function createNote({ tags, ...data }: NoteData) {
+		setNotes((prevNotes) => {
+			return [...prevNotes, { ...data, id: id, tagIds: tags.map(t => t.id) }]
+		})
+	}
+
 	return (
 		<Container className='my-4'>
 			<Routes>
 				<Route path='/' element={<h1>Hello</h1>} />
-				<Route path='/new' element={<NewNote />} />
+				<Route path='/new' element={<NewNote onSubmit={createNote} />} />
 				<Route path='/:id'>
 					<Route index element={<h1>Show</h1>} />
 					<Route path='edit' element={<h1>Edit</h1>} />
