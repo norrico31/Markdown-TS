@@ -2,6 +2,18 @@ import { Container } from 'react-bootstrap'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import NewNote from './pages/NewNote'
 
+export type Note = {
+	id: string
+} & NoteData
+
+export type NoteData = {
+	title: string
+	markdown: string
+	tags: Tags[]
+}
+
+export type Tags = { id: string; label: string }
+
 function App() {
 	return (
 		<Container className='my-4'>
