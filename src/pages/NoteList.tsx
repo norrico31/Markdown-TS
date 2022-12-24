@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react'
-import { Row, Col, Stack, Button, Form } from "react-bootstrap"
+import { Row, Col, Stack, Button, Form, Card, Badge } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from 'react-select'
-import { Note, Tag } from "../App"
+import { Tag } from "../App"
+import styles from '../styles/NoteList.module.css'
 
 type SimplifiedNote = {
     tags: Tag[]
@@ -73,6 +74,19 @@ export default function NoteList({ tags, notes }: Props) {
 
 function NoteCard({ note }: { note: SimplifiedNote }) {
     return (
-        <h2>Hello!</h2>
+        <Card as={Link} to={'/' + note.id} className={`h-100 text-reset text-decoration-none ${styles.card}`}>
+            <Card.Body>
+                <Stack gap={2} className='align-items-center justify-content-center h-100'>
+                    <span className='fs-5'>{note.title}</span>
+                    {note.tags.length > 0 ? (
+                        <Stack gap={1} direction='horizontal' className='justify-content-center flex-wrap'>
+                            {note.tags.map((tag) => (
+                                <Badge key={tag.id} className='text-truncate'>{tag.label}</Badge>
+                            ))}
+                        </Stack>
+                    ) : null}
+                </Stack>
+            </Card.Body>
+        </Card>
     )
 }
