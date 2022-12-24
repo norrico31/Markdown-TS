@@ -2,6 +2,7 @@ import { useMemo, useId } from 'react'
 import { Container } from 'react-bootstrap'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import NewNote from './pages/NewNote'
+import NoteList from './pages/NoteList'
 import { useLocalStorage } from './utils/useLocalStorage'
 
 export type Note = {
@@ -42,11 +43,15 @@ function App() {
 		})
 	}
 
+	function addTag(tag: Tag) {
+		setTags((prevTag) => [...prevTag, tag])
+	}
+
 	return (
 		<Container className='my-4'>
 			<Routes>
-				<Route path='/' element={<h1>Hello</h1>} />
-				<Route path='/new' element={<NewNote onSubmit={createNote} />} />
+				<Route path='/' element={<NoteList />} />
+				<Route path='/new' element={<NewNote onSubmit={createNote} addTag={addTag} tags={tags} />} />
 				<Route path='/:id'>
 					<Route index element={<h1>Show</h1>} />
 					<Route path='edit' element={<h1>Edit</h1>} />
