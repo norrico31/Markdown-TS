@@ -54,13 +54,17 @@ function App() {
 		setNotes((prevNotes => prevNotes.map((note) => note.id !== id ? note : { ...note, ...data, tagIds: tags.map(t => t.id) })))
 	}
 
+	function deleteNote(id: string) {
+		setNotes((prevNotes) => prevNotes.filter((n) => n.id !== id))
+	}
+
 	return (
 		<Container className='my-4'>
 			<Routes>
 				<Route path='/' element={<NoteList notes={noteWithTags} tags={tags} />} />
 				<Route path='/new' element={<NewNote onSubmit={createNote} addTag={addTag} tags={tags} />} />
 				<Route path='/:id' element={<NoteLayout notes={noteWithTags} />}>
-					<Route index element={<Note />} />
+					<Route index element={<Note deleteNote={deleteNote} />} />
 					<Route path='edit' element={<EditNote onSubmit={editNote} addTag={addTag} tags={tags} />} />
 				</Route>
 				<Route path='*' element={<Navigate to='/' />} />
