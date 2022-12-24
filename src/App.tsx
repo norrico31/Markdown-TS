@@ -2,6 +2,9 @@ import { useMemo, } from 'react'
 import { Container } from 'react-bootstrap'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { v4 as uuidV4 } from 'uuid'
+import Note from './components/Note'
+import NoteLayout from './components/NoteLayout'
+import EditNote from './pages/EditNote'
 import NewNote from './pages/NewNote'
 import NoteList from './pages/NoteList'
 import { useLocalStorage } from './utils/useLocalStorage'
@@ -47,14 +50,18 @@ function App() {
 		setTags((prevTag) => [...prevTag, tag])
 	}
 
+	function editNote(id: string, { tags, ...data }: NoteData) {
+		setNotes((prevNotes => prevNotes.map((note) => note.id !== id ? note : { ...note, ...data, tagIds: tags.map(t => t.id) })))
+	}
+
 	return (
 		<Container className='my-4'>
 			<Routes>
 				<Route path='/' element={<NoteList notes={noteWithTags} tags={tags} />} />
 				<Route path='/new' element={<NewNote onSubmit={createNote} addTag={addTag} tags={tags} />} />
-				<Route path='/:id'>
-					<Route index element={<h1>Show</h1>} />
-					<Route path='edit' element={<h1>Edit</h1>} />
+				<Route path='/:id' element={<NoteLayout notes={noteWithTags} />}>
+					<Route index element={<Note />} />
+					<Route path='edit' element={<EditNote onSubmit={editNote} addTag={addTag} tags={tags} />} />
 				</Route>
 				<Route path='*' element={<Navigate to='/' />} />
 			</Routes>

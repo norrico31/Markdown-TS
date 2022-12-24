@@ -9,7 +9,7 @@ type Props = {
     onSubmit: (data: NoteData) => void
     addTag: (tag: Tag) => void
     tags: Tag[]
-}
+} & Partial<NoteData>
 
 export default function NoteForm({ onSubmit, addTag, tags }: Props) {
     const titleRef = useRef<HTMLInputElement>(null)
