@@ -1,7 +1,8 @@
-import { useState, useRef, useId } from "react"
+import { useState, useRef } from "react"
 import { Form, Stack, Row, Col, Button } from "react-bootstrap"
 import CreatableReactSelect from 'react-select/creatable'
 import { Link, useNavigate } from "react-router-dom"
+import { v4 as uuidV4 } from 'uuid'
 import { NoteData, Tag } from "../App"
 
 type Props = {
@@ -14,7 +15,6 @@ export default function NoteForm({ onSubmit, addTag, tags }: Props) {
     const titleRef = useRef<HTMLInputElement>(null)
     const markdownRef = useRef<HTMLTextAreaElement>(null)
     const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-    const id = useId()
     const navigate = useNavigate()
 
     function handleSubmit(evt: React.FormEvent) {
@@ -44,7 +44,7 @@ export default function NoteForm({ onSubmit, addTag, tags }: Props) {
                                 isMulti
                                 options={tags.map((t) => ({ label: t.label, value: t.id }))}
                                 onCreateOption={label => {
-                                    const newTag = { id, label }
+                                    const newTag = { id: uuidV4(), label }
                                     addTag(newTag)
                                     setSelectedTags([...selectedTags, newTag])
                                 }}
